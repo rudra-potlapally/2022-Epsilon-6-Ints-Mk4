@@ -16,23 +16,23 @@ void Motor::move(int speed) {
     
     if (speed > 0) {
         analogWrite(pwmPin, constrain(speed,0,255));
-        digitalWrite(inaPin, HIGH);
-        digitalWrite(inbPin, LOW);
+        digitalWriteFast(inaPin, HIGH);
+        digitalWriteFast(inbPin, LOW);
     }
     else if (speed < 0) {
         analogWrite(pwmPin, constrain(abs(speed),0,255));
-        digitalWrite(inaPin, LOW);
-        digitalWrite(inbPin, HIGH);
+        digitalWriteFast(inaPin, LOW);
+        digitalWriteFast(inbPin, HIGH);
     }
     else {
         analogWrite(pwmPin, 0);
-        digitalWrite(inaPin, LOW);
-        digitalWrite(inbPin, LOW);
+        digitalWriteFast(inaPin, LOW);
+        digitalWriteFast(inbPin, LOW);
     }
 }
 
 void Motor::brake(){
     analogWrite(pwmPin, 0);
-    digitalWrite(inaPin, LOW);
-    digitalWrite(inbPin, LOW);
+    digitalWriteFast(inaPin, LOW);
+    digitalWriteFast(inbPin, LOW);
 }   

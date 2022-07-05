@@ -44,27 +44,33 @@ void LightSensor::readAll() {
 void LightSensor::test(){
     readAll();
 
-    for (int j = 0; j < LS_NUM; j++){
-        if (read[j] >= ls_cal[j]){
-            white[j] = 1;
-        } else{
-            white[j] = 0;
-        }
-        if( ROBOT == 1 ? j == 0 || j == 1 || j == 19 || j == 24 : j == 8 || j == 12) {
-            white[j] = 0;
-        }
-        Serial.print(white[j]);
-        Serial.print(" ");
-    }
-    Serial.println(" ");
-    delay(500);
-
-    // for(int i=0; i<32; i++){
-    //     Serial.print(read[i]);
+    // for (int j = 0; j < LS_NUM; j++){
+    //     if (read[j] >= ls_cal[j]){
+    //         if (j == 23 || j == 8 || j == 13){
+    //             if (white[j-1] || white[j+1]){
+    //                 white[j] = 1;
+    //             } else{
+    //                 white[j] = 0;
+    //             }
+    //         } else{
+    //             white[j] = 1;
+    //         }
+    //     }
+    //     else{
+    //         white[j] = 0;
+    //     }
+    //     Serial.print(white[j]);
     //     Serial.print(" ");
     // }
     // Serial.println(" ");
     // delay(500);
+
+    for(int i=0; i<32; i++){
+        Serial.print(read[i]);
+        Serial.print(" ");
+    }
+    Serial.println(" ");
+    delay(500);
 }
 
 void LightSensor::init(){
@@ -84,33 +90,28 @@ double LightSensor::update() {
 
     for (int j = 0; j < LS_NUM; j++){
         if (read[j] >= ls_cal[j]){
-            white[j] = 1;
+            if (j == 23 || j == 8 || j == 13){
+                if (white[j-1] || white[j+1]){
+                    white[j] = 1;
+                } else{
+                    white[j] = 0;
+                }
+            } else{
+                white[j] = 1;
+            }
         } else{
             white[j] = 0;
         }
     }
 
-    // for (uint8_t a = 0; a < LS_NUM; a++){
-    //     if (white[a] == 0){
-    //         if (white[a-1] == 1 && white[a+1] == 1){
-    //             white[a] = 1;
-    //         } else{
-    //             white[a] = 0;
-    //         }
-    //     }
-    // }
-
     for (int j = 0; j < LS_NUM; j++) { //reads sensors
-        if( ROBOT == 1 ? j == 0 || j == 1 || j == 19 || j == 24 : j == 8 || j == 12) {
-            continue;
-        }
         if (white[j] == 1) { //checks for white
             if (!inCluster){ //checks if it is in cluster
                 inCluster = true;
                 clusterNum++;
                 clusterArray[clusterNum].start = j;
             }
-            if (j == 32 && clusterArray[0].start != -1){
+            if (j == 31 && clusterArray[0].start != -1){
                 clusterArray[0].start = clusterArray[clusterNum].start;
             }
         }

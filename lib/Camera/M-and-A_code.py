@@ -45,27 +45,22 @@ while(True):
     blobs = sorted(blobs, key=lambda blob: -blob.area())
     yellow = None
     blue = None
-    #for blob in blobs:
-        #if math.sqrt((blob.cx()-60)**2 + (blob.cy()-60)**2) < 58:
-            #if data[0] == 60 and data[1] == 60 and blob.code() == YELLOW:
-                #data[0] = 120 - blob.cx()
-                #data[1] = 120 - blob.cy()
-            #if data[2] == 60 and data[3] == 60 and blob.code() == BLUE:
-                #data[2] = 120 - blob.cx()
-                #data[3] = 120 - blob.cy()
+    for blob in blobs:
+        if math.sqrt((blob.cx()-60)**2 + (blob.cy()-60)**2) < 58:
+            if data[0] == 60 and data[1] == 60 and blob.code() == YELLOW:
+                data[0] = 120 - blob.cx()
+                data[1] = 120 - blob.cy()
+            if data[2] == 60 and data[3] == 60 and blob.code() == BLUE:
+                data[2] = 120 - blob.cx()
+                data[3] = 120 - blob.cy()
     uart.writechar(255)
     uart.writechar(255)
-
-    uart.writechar(1)
-    uart.writechar(2)
-    uart.writechar(3)
-    uart.writechar(4)
-    #for byte in data:
-        #uart.writechar(byte)
-        #if draw:
-            #img.draw_circle(60, 60, 58)
-            #img.draw_line(int(round(FRAME_WIDTH)/2 - 10), int(round(FRAME_HEIGHT / 2)), int(round(FRAME_WIDTH / 2) + 10), int(round(FRAME_HEIGHT / 2)))
-            #img.draw_line(int(round(FRAME_WIDTH)/2), int(round(FRAME_HEIGHT / 2) + 10), int(round(FRAME_WIDTH / 2)), int(round(FRAME_HEIGHT / 2) -10))
-            #img.draw_line(int(round(FRAME_WIDTH)/2), int(round(FRAME_HEIGHT / 2) + 10), int(round(FRAME_WIDTH / 2)), int(round(FRAME_HEIGHT / 2) -10))
-            #img.draw_line(round(FRAME_WIDTH / 2), round(FRAME_HEIGHT / 2), 120 - data[2], 120 - data[3])
-            #img.draw_line(round(FRAME_WIDTH / 2), round(FRAME_HEIGHT / 2), 120 - data[0], 120 - data[1])
+    for byte in data:
+        uart.writechar(byte)
+        if draw:
+            img.draw_circle(60, 60, 58)
+            img.draw_line(int(round(FRAME_WIDTH)/2 - 10), int(round(FRAME_HEIGHT / 2)), int(round(FRAME_WIDTH / 2) + 10), int(round(FRAME_HEIGHT / 2)))
+            img.draw_line(int(round(FRAME_WIDTH)/2), int(round(FRAME_HEIGHT / 2) + 10), int(round(FRAME_WIDTH / 2)), int(round(FRAME_HEIGHT / 2) -10))
+            img.draw_line(int(round(FRAME_WIDTH)/2), int(round(FRAME_HEIGHT / 2) + 10), int(round(FRAME_WIDTH / 2)), int(round(FRAME_HEIGHT / 2) -10))
+            img.draw_line(round(FRAME_WIDTH / 2), round(FRAME_HEIGHT / 2), 120 - data[2], 120 - data[3])
+            img.draw_line(round(FRAME_WIDTH / 2), round(FRAME_HEIGHT / 2), 120 - data[0], 120 - data[1])

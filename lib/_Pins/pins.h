@@ -44,4 +44,6 @@
 #define CAMRX 47
 #define CAMTX 48
 
+#define LDR 49
+
 #endif

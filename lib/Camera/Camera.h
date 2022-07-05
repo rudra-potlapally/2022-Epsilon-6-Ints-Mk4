@@ -16,6 +16,12 @@ public:
     float defendAngle;
     float attackDist;
     float defendDist;
+    int yellowAngle;
+    int yellowDist;
+    int blueAngle;
+    int blueDist;
+    bool defendVis;
+    bool attackVis;
     
 
 private:
@@ -23,6 +29,10 @@ private:
     Vect yellowGoal;
     float ballPixeltoCM(float dist);
     float goalPixeltoCM(float dist);
+    float prevAngY;
+    float prevDistY;
+    float prevAngB;
+    float prevDistB;
 };
 
 #endif

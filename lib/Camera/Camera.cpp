@@ -7,22 +7,57 @@ void Camera::init() {
 }
 
 void Camera::update(bool attackBlue) {
-    if(Serial6.available() >= 6) {
+    if(Serial6.available() >= 7) {
         uint8_t firstByte = Serial6.read();
         uint8_t secondByte = Serial6.peek();
         if(firstByte == 255 && secondByte == 255) {
-            int yellowX = Serial6.read() - CENTRE_X;
-            int yellowY = Serial6.read() - CENTRE_Y;
-            int blueX = Serial6.read() - CENTRE_X;
-            int blueY = Serial6.read() - CENTRE_Y;
-            attackAngle = (attackBlue ? floatMod(RAD_TO_DEG * atan2f(blueY, blueX), 360.0) : floatMod(RAD_TO_DEG * atan2f(yellowY, yellowX), 360.0));
-            defendAngle = (attackBlue ? floatMod(RAD_TO_DEG * atan2f(yellowY, yellowX), 360.0) : floatMod(RAD_TO_DEG * atan2f(blueY, blueX), 360.0));
-            attackDist = (attackBlue ? sqrt(((blueX)^2)+((blueY)^2)) : sqrt(((yellowX)^2)+((yellowY)^2)));
-            defendDist = (attackBlue ? sqrt(((yellowX)^2)+((yellowY)^2)) : sqrt(((blueX)^2)+((blueY)^2)));
+            Serial6.read();
+            int yellowX = Serial6.read();
+            int yellowY = Serial6.read();
+            yellowAngle = floatMod((RAD2DEG * atan2(120-yellowY-60, 120-yellowX-60)), 360);
+            if(yellowAngle < 0){
+                yellowAngle += 360;
+            }
+            yellowDist = sqrt(((120-yellowX-60)*(120-yellowX-60))+((120-yellowY-60)*(120-yellowY-60)));
+            int blueX = Serial6.read();
+            int blueY = Serial6.read();
+            blueAngle = RAD2DEG * atan2(120-blueY-60, 120-blueX-60);
+            if(blueAngle < 0){
+                blueAngle += 360;
+            }
+            blueDist = sqrt(((120-blueX-60)*(120-blueX-60))+((120-blueY-60)*(120-blueY-60)));
+
+            attackVis = (attackBlue ? (blueAngle != 225 ? true : false) : (yellowAngle != 225 ? true : false));
+            defendVis = (attackBlue ? (yellowAngle != 225 ? true : false) : (blueAngle != 225 ? true : false));
+            
+            if(yellowAngle != 225){
+                prevAngY = yellowAngle;
+            } else{
+                yellowAngle = prevAngY;
+            }
+            if(yellowDist < 60){
+                prevDistY = yellowDist;
+            } else{
+                yellowDist = prevDistY;
+            }
+            if(blueAngle != 225){
+                prevAngB = blueAngle;
+            } else{
+                blueAngle = prevAngB;
+            }
+            if(blueDist < 60){
+                prevDistB = blueDist;
+            } else{
+                blueDist = prevDistB;
+            }
+
+            attackAngle = (attackBlue ? blueAngle : yellowAngle);
+            attackDist = (attackBlue ? blueDist : yellowDist);
+            defendAngle = (attackBlue ? yellowAngle : yellowDist);
+            defendDist = (attackBlue ? yellowDist : blueDist);
         }
-    } else{
-        Serial.println("no serial");
     }
+    // delay(10);
 }
 
 float Camera::ballPixeltoCM(float dist){

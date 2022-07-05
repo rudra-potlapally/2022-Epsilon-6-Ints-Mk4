@@ -35,23 +35,39 @@ void LEDoff(int pin);
 
 //--------- ORBIT ---------//
 #define ORBIT_STRIKE_ANGLE 10
-#define ORBIT_CLOSE_SPEED (ROBOT == 1 ? 60 : 45)
-#define ORBIT_FAR_SPEED (ROBOT == 1 ? 70 : 55)
-#define ORBIT_STRIKE_SPEED (ROBOT == 1 ? 80 : 65)
+#define ORBIT_CLOSE_SPEED (ROBOT == 1 ? 30 : 90 )
+#define ORBIT_FAR_SPEED (ROBOT == 1 ? 80 : 120 )
+#define ORBIT_STRIKE_SPEED (ROBOT == 1 ? 100 : 140 )
 
 //--------- COMPASS ---------//
 
-#define COMPASS_P (ROBOT == 1 ? 0.62 : 0.62)
+#define COMPASS_P (ROBOT == 1 ? 0.62 : 0.31)
 #define COMPASS_I 0.0
-#define COMPASS_D (ROBOT == 2 ? 0.02 : 0.02)
+#define COMPASS_D (ROBOT == 1 ? 0.02 : 0.03)
+
+#define SIDEWAY_P (ROBOT == 1 ? 1.0 : 0.5)
+#define SIDEWAY_I 0.0
+#define SIDEWAY_D (ROBOT == 1 ? 0.04 : 0.02)
+
+#define yup_P (ROBOT == 1 ? 1.0 : 0.75)
+#define yup_I 0.0
+#define yup_D (ROBOT == 1 ? 0.08 : 0.04)
+
+#define defend_P (ROBOT == 1 ? 0.2 : 0.5)
+#define defend_I 0.0
+#define defend_D (ROBOT == 1 ? 0.04 : 0.03)
+
+#define attack_P (ROBOT == 1 ? 0.2 : 0.2)
+#define attack_I 0.0
+#define attack_D (ROBOT == 1 ? 0.02 : 0.02)
 
 //----------LIGHT SENSORS ----------------//
 
 #define LS_NUM 32
 #define LS_NUM_IND 16
-#define LINE_BUFFER (ROBOT == 1 ? 600 : 250)
-#define LS_AVOID_MEDIUM (ROBOT == 1 ? 110 : 110)
-#define LS_AVOID_FAST (ROBOT == 1 ? 110 : 110)
+#define LINE_BUFFER (ROBOT == 1 ? 400 : 300)
+#define LS_AVOID_MEDIUM (ROBOT == 1 ? 140  : 200 )
+#define LS_AVOID_FAST (ROBOT == 1 ? 160  : 220)
 #define LS_CALIBRATE_COUNT 10
 #define LS_OFFSET 0
 #define lineAngleOffset 90
@@ -160,7 +176,7 @@ void LEDoff(int pin);
 
 #define TSSP_NUM 16
 #define TSSP_READ_NUM 256
-#define BALL_CLOSE_STRENGTH (ROBOT == 1 ? 160 : 180)
+#define BALL_CLOSE_STRENGTH (ROBOT == 1 ? 160 : 155)
 #define BALL_CLOSE_STRENGTH_LEFT (ROBOT == 1 ? 185 : 185)
 #define SURGE_ANGLE 10
 #define SURGE_SPEED 80
@@ -181,11 +197,35 @@ void LEDoff(int pin);
 #define COMPASS_DEBUG 15
 #define LS_DEBUG 13
 
+// --- KICKER --- //
+
+#define LDR_HIGH 50
+#define LDR_LOW 25
+#define KICKER_SIG 14
+
 // --- CAMERA --- //
-#define CAMERA_BAUD 9600
+
+#define CAMERA_BAUD 15200
 #define defendGoalFar 40
 #define defendGoalClose 10
-#define DEFENSE_SUGRE_SPEED (ROBOT == 1 ? 100 : 100)
-#define DEFENSE_SURGE_STRENGTH (ROBOT == 1 ? 135 : 125)
+#define DEFENSE_SURGE_ANGLE 10
+#define DEFENSE_SPEED 40
+#define SWITCH_SPEED 40 
+#define DEFENSE_SUGRE_SPEED (ROBOT == 1 ? 100  : 150)
+#define DEFENSE_SURGE_STRENGTH (ROBOT == 1 ? 135 : 145)
+
+// --- BLUETOOTH --- //
+
+#define BT_BAUD 9600
+#define BT_DISCONNECTED_TIME 1000000
+#define BT_CONNECTED_TIMER 1000
+#define BT_UPDATE_TIME 100000
+#define BT_START_BYTE 255
+#define BT_PACKET_SIZE 6
+#define BT_SEND_TIMER 10
+#define BT_SWITCH_TIMER 4000
+#define SWITCH_STRENGTH_CONST 40
+#define DEFENSE_MODE 0
+#define ATTACK_MODE 1
 
 #endif
