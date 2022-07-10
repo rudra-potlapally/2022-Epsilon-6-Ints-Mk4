@@ -13,6 +13,7 @@
 #include "TSSPs.h"
 #include "orbit.h"
 #include "Camera.h"
+#include "kicker.h"
 
 Movement motors;
 Adafruit_BNO055 bno = Adafruit_BNO055 (55, 0x29, &Wire);
@@ -26,8 +27,8 @@ oAvoidance outAvoidance;
 TSSPs tssps;
 Orbit orbit;
 Camera camera;
-Vect vector;
-float previousLine;
+Kicker kicker;
+
 struct Move{
 	int speed;
 	int dir;
@@ -60,12 +61,12 @@ float centre_correct(float targetHeading = 180){
 }
 
 int forwards_correct() {
-	float targetDist = (ROBOT == 1 ? 45 : 22);
+	float targetDist = (ROBOT == 1 ? 53 : 31);
 	int currentDist = camera.defendDist;
-	if(ROBOT == 1 ? currentDist < 43 : currentDist < 22){
-		currentDist = (ROBOT == 1 ? -10 : -30);
-	} if (ROBOT == 1 ? currentDist > 45 : currentDist > 26){
-		currentDist = (ROBOT == 1 ? 90 : 80);
+	if(ROBOT == 1 ? currentDist < 51 : currentDist < 30){
+		currentDist = (ROBOT == 1 ? -10 : -20);
+	} if (ROBOT == 1 ? currentDist > 55 : currentDist > 34){
+		currentDist = (ROBOT == 1 ? 90 : 70);
 	}
 	return yupPid.update(currentDist, targetDist);
 }
@@ -135,10 +136,10 @@ void setup() {
 	Serial.begin(9600);
 	lightsensor.init();
 	camera.init();
+	kicker.init();
 	pinMode(FLINA, OUTPUT);
 	pinMode(FLINB, OUTPUT);
 	pinMode(FLPWM, OUTPUT);
-	pinMode(KICKER_SIG, OUTPUT);
 
 	debug();
 }
@@ -220,32 +221,27 @@ void loop() {
 
 	// ----- SETUP -----//
 	
-	// tssps.update();
-	// bnoCtr++;
-	// float ol = lightsensor.update();
-	// if(bnoCtr % 5 == 0) {
-	// 	bno.getEvent(&event);
-	// }
-	// float orient = -1* ((float)event.orientation.x) +360;
-	// if (orient > 180){
-	// 	orient = orient -360;
-	// }
-  	// float lineAngle = (ol != -1 ? floatMod(ol+orient, 360) : -1.00);
-  	// oAvoidance::Movement outavoidance = outAvoidance.moveDirection(lineAngle);
-  	// outavoidance.direction = (outavoidance.direction != -1 ? -1* (floatMod(outavoidance.direction+orient, 360)) + 360 : -1.00);	
-	// camera.update(true);
+	tssps.update();
+	bnoCtr++;
+	float ol = lightsensor.update();
+	if(bnoCtr % 5 == 0) {
+		bno.getEvent(&event);
+	}
+	float orient = -1* ((float)event.orientation.x) +360;
+	if (orient > 180){
+		orient = orient -360;
+	}
+  	float lineAngle = (ol != -1 ? floatMod(ol+orient, 360) : -1.00);
+  	oAvoidance::Movement outavoidance = outAvoidance.moveDirection(lineAngle);
+  	outavoidance.direction = (outavoidance.direction != -1 ? -1* (floatMod(outavoidance.direction-orient, 360)) + 360 : -1.00);	
+	camera.update(false);
 
 	// Move att = attack(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, lineAngle);
-	// motors.move(att.speed, att.dir, attack_correct());
+	// motors.move(att.speed, att.dir, compass_correct(0, (float)event.orientation.x));
 
 	// Move def = defend(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, camera.defendVis, camera.defendDist);
 	// motors.move(def.speed, def.dir, def.rot);
 
-	// motors.move(outavoidance.speed, outavoidance.direction, compass_correct());
-
-	digitalWrite(KICKER_SIG, LOW);
-	delay(2000);
-	digitalWrite(KICKER_SIG, HIGH);
-	delay(50);
-
+	kicker.update();
+	Serial.println(analogRead(LG_SIG));
 }

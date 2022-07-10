@@ -35,21 +35,21 @@ void Camera::update(bool attackBlue) {
             } else{
                 yellowAngle = prevAngY;
             }
-            if(yellowDist < 60){
-                prevDistY = yellowDist;
-            } else{
-                yellowDist = prevDistY;
-            }
+            // if(yellowDist < 60){
+            //     prevDistY = yellowDist;
+            // } else{
+            //     yellowDist = prevDistY;
+            // }
             if(blueAngle != 225){
                 prevAngB = blueAngle;
             } else{
                 blueAngle = prevAngB;
             }
-            if(blueDist < 60){
-                prevDistB = blueDist;
-            } else{
-                blueDist = prevDistB;
-            }
+            // if(blueDist < 60){
+            //     prevDistB = blueDist;
+            // } else{
+            //     blueDist = prevDistB;
+            // }
 
             attackAngle = (attackBlue ? blueAngle : yellowAngle);
             attackDist = (attackBlue ? blueDist : yellowDist);

@@ -4,6 +4,7 @@
 #include <Timer.h>
 #include <defines.h>
 #include <pins.h>
+#include "SoftwareSerial.h"
 
 class Bluetooth
 {

@@ -44,33 +44,33 @@ void LightSensor::readAll() {
 void LightSensor::test(){
     readAll();
 
-    // for (int j = 0; j < LS_NUM; j++){
-    //     if (read[j] >= ls_cal[j]){
-    //         if (j == 23 || j == 8 || j == 13){
-    //             if (white[j-1] || white[j+1]){
-    //                 white[j] = 1;
-    //             } else{
-    //                 white[j] = 0;
-    //             }
-    //         } else{
-    //             white[j] = 1;
-    //         }
-    //     }
-    //     else{
-    //         white[j] = 0;
-    //     }
-    //     Serial.print(white[j]);
-    //     Serial.print(" ");
-    // }
-    // Serial.println(" ");
-    // delay(500);
-
-    for(int i=0; i<32; i++){
-        Serial.print(read[i]);
+    for (int j = 0; j < LS_NUM; j++){
+        if (read[j] >= ls_cal[j]){
+            if (j == 23 || j == 8 || j == 13){
+                if (white[j-1] || white[j+1]){
+                    white[j] = 1;
+                } else{
+                    white[j] = 0;
+                }
+            } else{
+                white[j] = 1;
+            }
+        }
+        else{
+            white[j] = 0;
+        }
+        Serial.print(white[j]);
         Serial.print(" ");
     }
     Serial.println(" ");
     delay(500);
+
+    // for(int i=0; i<32; i++){
+    //     Serial.print(read[i]);
+    //     Serial.print(" ");
+    // }
+    // Serial.println(" ");
+    // delay(500);
 }
 
 void LightSensor::init(){

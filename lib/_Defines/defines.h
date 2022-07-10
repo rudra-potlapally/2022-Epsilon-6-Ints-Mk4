@@ -9,7 +9,7 @@
 
 //--------- GENERAL ---------//
 
-#define ROBOT 2
+#define ROBOT 1
 
 float floatMod(float x, float m);
 
@@ -41,21 +41,21 @@ void LEDoff(int pin);
 
 //--------- COMPASS ---------//
 
-#define COMPASS_P (ROBOT == 1 ? 0.62 : 0.31)
+#define COMPASS_P (ROBOT == 1 ? 0.62 : 0.62)
 #define COMPASS_I 0.0
-#define COMPASS_D (ROBOT == 1 ? 0.02 : 0.03)
+#define COMPASS_D (ROBOT == 1 ? 0.02 : 0.02)
 
 #define SIDEWAY_P (ROBOT == 1 ? 1.0 : 0.5)
 #define SIDEWAY_I 0.0
 #define SIDEWAY_D (ROBOT == 1 ? 0.04 : 0.02)
 
-#define yup_P (ROBOT == 1 ? 1.0 : 0.75)
+#define yup_P (ROBOT == 1 ? 1.0 : 1.0)
 #define yup_I 0.0
-#define yup_D (ROBOT == 1 ? 0.08 : 0.04)
+#define yup_D (ROBOT == 1 ? 0.08 : 0.08)
 
-#define defend_P (ROBOT == 1 ? 0.2 : 0.5)
+#define defend_P (ROBOT == 1 ? 0.5 : 0.5)
 #define defend_I 0.0
-#define defend_D (ROBOT == 1 ? 0.04 : 0.03)
+#define defend_D (ROBOT == 1 ? 0.03 : 0.03)
 
 #define attack_P (ROBOT == 1 ? 0.2 : 0.2)
 #define attack_I 0.0
@@ -199,10 +199,11 @@ void LEDoff(int pin);
 
 // --- KICKER --- //
 
-#define LDR_HIGH 50
-#define LDR_LOW 25
+#define LDR_OFSET 80
 #define KICKER_SIG 14
-
+#define LG_SIG 49
+#define KICK_DISCHARGE_TIME 150000 //ms
+#define KICK_CHARGE_TIME 1250000*2
 // --- CAMERA --- //
 
 #define CAMERA_BAUD 15200
