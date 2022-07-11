@@ -32,7 +32,7 @@ void Motor::move(int speed) {
 }
 
 void Motor::brake(){
-    analogWrite(pwmPin, 0);
-    digitalWriteFast(inaPin, LOW);
-    digitalWriteFast(inbPin, LOW);
+    // analogWrite(pwmPin, 0);
+    digitalWriteFast(inaPin, HIGH);
+    digitalWriteFast(inbPin, HIGH);
 }   

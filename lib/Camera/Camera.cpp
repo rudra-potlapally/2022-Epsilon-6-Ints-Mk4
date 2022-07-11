@@ -28,9 +28,9 @@ void Camera::update(bool attackBlue) {
             blueDist = sqrt(((120-blueX-60)*(120-blueX-60))+((120-blueY-60)*(120-blueY-60)));
 
             attackVis = (attackBlue ? (blueAngle != 225 ? true : false) : (yellowAngle != 225 ? true : false));
-            defendVis = (attackBlue ? (yellowAngle != 225 ? true : false) : (blueAngle != 225 ? true : false));
+            defendVis = (attackBlue ? (yellowAngle != 225 ? true : false) : (blueAngle != 275 ? true : false));
             
-            if(yellowAngle != 225){
+            if(yellowAngle != 275){
                 prevAngY = yellowAngle;
             } else{
                 yellowAngle = prevAngY;
@@ -53,7 +53,7 @@ void Camera::update(bool attackBlue) {
 
             attackAngle = (attackBlue ? blueAngle : yellowAngle);
             attackDist = (attackBlue ? blueDist : yellowDist);
-            defendAngle = (attackBlue ? yellowAngle : yellowDist);
+            defendAngle = (attackBlue ? yellowAngle : blueAngle);
             defendDist = (attackBlue ? yellowDist : blueDist);
         }
     }

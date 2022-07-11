@@ -14,6 +14,7 @@
 #include "orbit.h"
 #include "Camera.h"
 #include "kicker.h"
+#include "MotorMusic.h"
 
 Movement motors;
 Adafruit_BNO055 bno = Adafruit_BNO055 (55, 0x29, &Wire);
@@ -70,7 +71,6 @@ int forwards_correct() {
 	}
 	return yupPid.update(currentDist, targetDist);
 }
-
 
 float defend_correct(float targetHeading = 180) {
 	int orient = camera.defendAngle;
@@ -211,6 +211,9 @@ Move defend(double ballDir, double ballStr, bool ballVis, double outDir, double 
 }
 
 void loop() {
+
+	// ----- TIMER -----//
+
 	// if(micros() - start > 1000000) {
 	// 	Serial.printf("Freq %iHz\n", counter);
 	// 	Serial.printf("Period: %fms\n", 1000/(float)counter);
@@ -219,14 +222,16 @@ void loop() {
 	// }
 	// counter++;
 
-	// ----- SETUP -----//
+	// ----- SENSOR INPUT -----//
 	
 	tssps.update();
+
 	bnoCtr++;
-	float ol = lightsensor.update();
 	if(bnoCtr % 5 == 0) {
 		bno.getEvent(&event);
 	}
+
+	float ol = lightsensor.update();
 	float orient = -1* ((float)event.orientation.x) +360;
 	if (orient > 180){
 		orient = orient -360;
@@ -234,14 +239,56 @@ void loop() {
   	float lineAngle = (ol != -1 ? floatMod(ol+orient, 360) : -1.00);
   	oAvoidance::Movement outavoidance = outAvoidance.moveDirection(lineAngle);
   	outavoidance.direction = (outavoidance.direction != -1 ? -1* (floatMod(outavoidance.direction-orient, 360)) + 360 : -1.00);	
+	
 	camera.update(false);
 
-	// Move att = attack(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, lineAngle);
-	// motors.move(att.speed, att.dir, compass_correct(0, (float)event.orientation.x));
+	// ----- ATTACK -----//
 
-	// Move def = defend(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, camera.defendVis, camera.defendDist);
-	// motors.move(def.speed, def.dir, def.rot);
+	Move att = attack(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, lineAngle);
+	motors.move(att.speed, att.dir, compass_correct(0, (float)event.orientation.x));
 
-	kicker.update();
-	Serial.println(analogRead(LG_SIG));
+	// ----- DEFEND -----//
+
+	Move def = defend(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, camera.defendVis, camera.defendDist);
+	motors.move(def.speed, def.dir, def.rot);
+
+	// ----- TESTING -----//
+	uint8_t t = -1;
+	// OUTAVOIDANCE = OL : LINEANGLE : OUTAVOIDANCE DIRECTION
+	if (t = 2){
+		Serial.print(ol);
+		Serial.print("\t");
+		Serial.print(lineAngle);
+		Serial.print("\t");
+		Serial.println(outavoidance.direction);
+	}
+
+	// BALL DIRECTION = BALL DIR : BALL STR : ORBIT DIR
+	if (t = 1){
+		Serial.print(tssps.ballDir);
+		Serial.print("\t");
+		Serial.print(tssps.ballStr);
+		Serial.print("\t");
+		Serial.println(floatMod((-1*(tssps.ballDir+tssps.calculateAngleAddition()))+360,360));
+	}
+
+	//CAMERA = ATTACK ANGLE : ATTACK DIST : DEFEND ANGLE : DEFEND DIST
+	if (t = 4){
+		Serial.print(camera.attackAngle);
+		Serial.print("\t");
+		Serial.print(camera.attackDist);
+		Serial.print("\t");
+		Serial.print(camera.defendAngle);
+		Serial.print("\t");
+		Serial.println(camera.defendDist);
+	}
+
+	//LIGHTGATE = LIGHT GATE SIGNAL
+	if (t = 3){
+		Serial.println(analogRead(LG_SIG));
+	}
+
+	else{
+		Serial.println("incorrect input");
+	}
 }

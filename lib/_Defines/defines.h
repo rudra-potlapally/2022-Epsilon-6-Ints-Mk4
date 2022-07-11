@@ -57,9 +57,9 @@ void LEDoff(int pin);
 #define defend_I 0.0
 #define defend_D (ROBOT == 1 ? 0.03 : 0.03)
 
-#define attack_P (ROBOT == 1 ? 0.2 : 0.2)
+#define attack_P (ROBOT == 1 ? 0.2 : 0.1)
 #define attack_I 0.0
-#define attack_D (ROBOT == 1 ? 0.02 : 0.02)
+#define attack_D (ROBOT == 1 ? 0.02 : 0.03)
 
 //----------LIGHT SENSORS ----------------//
 
@@ -204,6 +204,8 @@ void LEDoff(int pin);
 #define LG_SIG 49
 #define KICK_DISCHARGE_TIME 150000 //ms
 #define KICK_CHARGE_TIME 1250000*2
+#define KICKING_DISTANCE 50
+
 // --- CAMERA --- //
 
 #define CAMERA_BAUD 15200

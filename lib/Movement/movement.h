@@ -10,6 +10,7 @@ class Movement {
     public:
         Movement();
         void move(int speed, int direction, int rotation);
+        void brake(int power) {this->move(0, 0, power); bl.brake(); fl.brake(); br.brake(); fr.brake();}
     private:
         Motor bl, fl, br, fr;
 };
