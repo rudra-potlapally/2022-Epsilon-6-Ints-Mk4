@@ -12,15 +12,25 @@ void Kicker::init(){
     lgCalVal = sum + LDR_OFSET;
 }
 
-void Kicker::update(){
+void Kicker::update(int attackDist){
     if(this->kickDischarge.timeHasPassedNoUpdate()) {
         if(this->kickCharge.timeHasPassedNoUpdate()) {
             if(analogRead(LG_SIG) > lgCalVal){
-                digitalWrite(KICKER_SIG, HIGH);
-                this->kickDischarge.resetTime();
-                this->kickCharge.resetTime();
+                // if(attackDist < 60){
+                    digitalWrite(KICKER_SIG, HIGH);
+                    this->kickDischarge.resetTime();
+                    this->kickCharge.resetTime();
+                    kicked = true;
+                //  else{
+                //     kicked = false;
+                //     digitalWrite(KICKER_SIG, LOW);
+                // }
+            } else{
+                kicked = false;
+                digitalWrite(KICKER_SIG, LOW);
             }
         } else {
+            kicked = false;
             digitalWrite(KICKER_SIG, LOW);
         }
     }

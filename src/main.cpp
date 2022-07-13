@@ -62,12 +62,12 @@ float centre_correct(float targetHeading = 180){
 }
 
 int forwards_correct() {
-	float targetDist = (ROBOT == 1 ? 53 : 31);
+	float targetDist = (ROBOT == 1 ? 53 : 40);
 	int currentDist = camera.defendDist;
-	if(ROBOT == 1 ? currentDist < 51 : currentDist < 30){
-		currentDist = (ROBOT == 1 ? -10 : -20);
-	} if (ROBOT == 1 ? currentDist > 55 : currentDist > 34){
-		currentDist = (ROBOT == 1 ? 90 : 70);
+	if(ROBOT == 1 ? currentDist < 51 : currentDist < 38){
+		currentDist = (ROBOT == 1 ? -10 : 20);
+	} if (ROBOT == 1 ? currentDist > 55 : currentDist > 42){
+		currentDist = (ROBOT == 1 ? 90 : 60);
 	}
 	return yupPid.update(currentDist, targetDist);
 }
@@ -147,10 +147,10 @@ void setup() {
 Move attack(double ballDir, double ballStr, bool ballVis, double outDir, double outSpd, double lineAngle){
 	Move movement;
 	if (lineAngle != -1) {
-		if (ballDir > floatMod(lineAngle+100, 360) && ballDir < floatMod(lineAngle-100, 360)){
+		if (ballDir > floatMod(lineAngle+90, 360) && ballDir < floatMod(lineAngle-90, 360)){
 			if (tssps.ballVisible) {
 				Orbit::OrbitData orbitData = orbit.update(tssps.ballDir, tssps.ballStr);
-				movement.dir = floatMod((-1*(tssps.ballDir+tssps.calculateAngleAddition()))+360,360);
+				movement.dir = -1* floatMod((tssps.ballDir+tssps.calculateAngleAddition()), 360) + 360;
 				movement.speed = orbitData.speed;
 			}
 		} else{
@@ -161,7 +161,7 @@ Move attack(double ballDir, double ballStr, bool ballVis, double outDir, double 
 	else {
 		if (tssps.ballVisible) {
 			Orbit::OrbitData orbitData = orbit.update(tssps.ballDir, tssps.ballStr);
-			movement.dir = floatMod((-1*(tssps.ballDir+tssps.calculateAngleAddition()))+360,360);
+			movement.dir = -1* floatMod((tssps.ballDir+tssps.calculateAngleAddition()), 360) + 360;
 			movement.speed = orbitData.speed;
 		}
 		else {
@@ -169,43 +169,48 @@ Move attack(double ballDir, double ballStr, bool ballVis, double outDir, double 
 			movement.speed = 0;
 		}
 	}
+
+	// if(kicker.kicked == true){
+	// 	for (uint8_t i = 0; i < 20; i++){
+	// 		movement.speed -= 10;
+	// 	}
+	// } else{
+	// 	movement.speed = movement.speed;
+	// }
 	return movement;
 }
 
-Move defend(double ballDir, double ballStr, bool ballVis, double outDir, double outSpd, bool defendVis, int defendDist){
+Move defend(double ballDir, double ballStr, bool ballVis, double outDir, double outSpd, bool defendVis, int defendDist, double lineAngle){
 	Move move;
 	bnoCtr++;
 	if(bnoCtr % 5 == 0) {
 		bno.getEvent(&event);
 	}
-	
+	// float orient = -1* ((float)event.orientation.x) +360;
 	if(outDir == -1){
 		if(ballVis && defendVis){
 			if (ballStr > DEFENSE_SURGE_STRENGTH){
-					if(defendDist < (ROBOT == 1 ? 50 : 40)){
-						move.dir = tssps.ballDir; 
-						move.speed = DEFENSE_SUGRE_SPEED;
-						move.rot = compass_correct(0, (float)event.orientation.x);
-					} else{
+					if (defendDist < (ROBOT == 1 ? 50 : 50)){
+						Move att = attack(ballDir, ballStr, ballVis, outDir, outSpd, lineAngle);
+						move.speed = att.speed;
+						move.dir = att.dir;
+						move.rot = defend_correct();
+					}
+				} else {
 					move.speed = sqrt(((forwards_correct())*(forwards_correct()))+((sideways_correct())*(sideways_correct())));
 					move.dir = floatMod(RAD_TO_DEG * atan2(sideways_correct(), forwards_correct()), 360);
 					move.rot = defend_correct();
 				}
-			} else {
-				move.speed = sqrt(((forwards_correct())*(forwards_correct()))+((sideways_correct())*(sideways_correct())));
-				move.dir = floatMod(RAD_TO_DEG * atan2(sideways_correct(), forwards_correct()), 360);
-				move.rot = defend_correct();
+			} else{
+				move.speed = sqrt(((forwards_correct())*(forwards_correct()))+((centre_correct())*(centre_correct())));
+				move.dir = floatMod(RAD_TO_DEG * atan2(centre_correct(), forwards_correct()), 360);
+				move.rot = compass_correct(0, (float)event.orientation.x);
 			}
 		} else{
-			move.speed = sqrt(((forwards_correct())*(forwards_correct()))+((centre_correct())*(centre_correct())));
-			move.dir = floatMod(RAD_TO_DEG * atan2(centre_correct(), forwards_correct()), 360);
-			move.rot = compass_correct(0, (float)event.orientation.x);
+			move.dir = outDir;
+			move.speed = outSpd;
+			move.rot = defend_correct();
 		}
-	} else{
-		move.dir = outDir;
-		move.speed = outSpd;
-		move.rot = defend_correct();
-	}
 
 	return move;	
 }
@@ -230,7 +235,6 @@ void loop() {
 	if(bnoCtr % 5 == 0) {
 		bno.getEvent(&event);
 	}
-
 	float ol = lightsensor.update();
 	float orient = -1* ((float)event.orientation.x) +360;
 	if (orient > 180){
@@ -239,56 +243,50 @@ void loop() {
   	float lineAngle = (ol != -1 ? floatMod(ol+orient, 360) : -1.00);
   	oAvoidance::Movement outavoidance = outAvoidance.moveDirection(lineAngle);
   	outavoidance.direction = (outavoidance.direction != -1 ? -1* (floatMod(outavoidance.direction-orient, 360)) + 360 : -1.00);	
-	
-	camera.update(false);
-
+	// camera.update(true);
+	kicker.update(camera.attackDist);
 	// ----- ATTACK -----//
 
 	Move att = attack(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, lineAngle);
 	motors.move(att.speed, att.dir, compass_correct(0, (float)event.orientation.x));
 
+	// Serial.println(att.dir);
+
+
 	// ----- DEFEND -----//
 
-	Move def = defend(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, camera.defendVis, camera.defendDist);
-	motors.move(def.speed, def.dir, def.rot);
+	// Move def = defend(tssps.ballDir, tssps.ballStr, tssps.ballVisible, outavoidance.direction, outavoidance.speed, camera.defendVis, camera.defendDist, lineAngle);
+	// motors.move(def.speed, def.dir, def.rot);
+	// motors.move(forwards_correct(), 0, defend_correct());
+	// motors.move(sqrt(((forwards_correct())*(forwards_correct()))+((sideways_correct())*(sideways_correct()))), floatMod(RAD_TO_DEG * atan2(sideways_correct(), forwards_correct()), 360), (camera.defendDist < 55 ? defend_correct() : compass_correct(0, (float)event.orientation.x)));
 
 	// ----- TESTING -----//
-	uint8_t t = -1;
 	// OUTAVOIDANCE = OL : LINEANGLE : OUTAVOIDANCE DIRECTION
-	if (t = 2){
-		Serial.print(ol);
-		Serial.print("\t");
-		Serial.print(lineAngle);
-		Serial.print("\t");
-		Serial.println(outavoidance.direction);
-	}
+	//  Serial.print(ol);
+	//  Serial.print("\t");
+	//  Serial.print(lineAngle);
+	//  Serial.print("\t");
+	//  Serial.println(outavoidance.direction);
 
 	// BALL DIRECTION = BALL DIR : BALL STR : ORBIT DIR
-	if (t = 1){
-		Serial.print(tssps.ballDir);
-		Serial.print("\t");
-		Serial.print(tssps.ballStr);
-		Serial.print("\t");
-		Serial.println(floatMod((-1*(tssps.ballDir+tssps.calculateAngleAddition()))+360,360));
-	}
+	// Serial.print(tssps.ballDir);
+	// Serial.print("\t");
+	// Serial.println(tssps.ballStr);
+	// Serial.print("\t");
+	// Serial.println(floatMod((-1*(tssps.ballDir+tssps.calculateAngleAddition()))+360,360));
 
 	//CAMERA = ATTACK ANGLE : ATTACK DIST : DEFEND ANGLE : DEFEND DIST
-	if (t = 4){
-		Serial.print(camera.attackAngle);
-		Serial.print("\t");
-		Serial.print(camera.attackDist);
-		Serial.print("\t");
-		Serial.print(camera.defendAngle);
-		Serial.print("\t");
-		Serial.println(camera.defendDist);
-	}
+	// Serial.print(camera.attackAngle);
+	// Serial.print("\t");
+	// Serial.print(camera.attackDist);
+	// Serial.print("\t");
+	// Serial.println(camera.defendAngle);
+	// Serial.print("\t");
+	// Serial.println(camera.defendDist);
 
 	//LIGHTGATE = LIGHT GATE SIGNAL
-	if (t = 3){
-		Serial.println(analogRead(LG_SIG));
-	}
+	// Serial.println(analogRead(LG_SIG));
 
-	else{
-		Serial.println("incorrect input");
-	}
+	// lightsensor.test();
+
 }

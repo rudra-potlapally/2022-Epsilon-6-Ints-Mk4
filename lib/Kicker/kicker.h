@@ -9,8 +9,9 @@
 class Kicker {
     public:
         void kick();
-        void update();
+        void update(int attackDist);
         void init();
+        bool kicked;
     private:
         bool shouldKick = false;
         bool triggered = false;
