@@ -10,6 +10,9 @@
 //--------- GENERAL ---------//
 
 #define ROBOT 1
+#define blueAttack 1
+#define SUPERTEAM 0
+#define STSTOP LOW
 
 float floatMod(float x, float m);
 
@@ -36,14 +39,14 @@ void LEDoff(int pin);
 //--------- ORBIT ---------//
 #define ORBIT_STRIKE_ANGLE 10
 #define ORBIT_CLOSE_SPEED 30
-#define ORBIT_FAR_SPEED 40
-#define ORBIT_STRIKE_SPEED 40
+#define ORBIT_FAR_SPEED 30
+#define ORBIT_STRIKE_SPEED 30
 
 //--------- COMPASS ---------//
 
-#define COMPASS_P (ROBOT == 1 ? 0.55 : 0.62)
+#define COMPASS_P (ROBOT == 1 ? 0.55 : 0.1)
 #define COMPASS_I 0.0
-#define COMPASS_D (ROBOT == 1 ? 0.11 : 0.02)
+#define COMPASS_D (ROBOT == 1 ? 0.11 : 0.04)
 
 #define SIDEWAY_P (ROBOT == 1 ? 1.0 : 0.6)
 #define SIDEWAY_I 0.0
@@ -66,8 +69,8 @@ void LEDoff(int pin);
 #define LS_NUM 32
 #define LS_NUM_IND 16
 #define LINE_BUFFER (ROBOT == 1 ? 900 : 840)
-#define LS_AVOID_MEDIUM (ROBOT == 1 ? 220  : 200 )
-#define LS_AVOID_FAST (ROBOT == 1 ? 240  : 220)
+#define LS_AVOID_MEDIUM (ROBOT == 1 ? 250  : 200 )
+#define LS_AVOID_FAST (ROBOT == 1 ? 250  : 220)
 #define LS_CALIBRATE_COUNT 10
 #define LS_OFFSET 0
 #define lineAngleOffset 90
@@ -176,7 +179,7 @@ void LEDoff(int pin);
 
 #define TSSP_NUM 16
 #define TSSP_READ_NUM 256
-#define BALL_CLOSE_STRENGTH (ROBOT == 1 ? 140 : 155)
+#define BALL_CLOSE_STRENGTH (ROBOT == 1 ? 155 : 155)
 #define BALL_CLOSE_STRENGTH_LEFT (ROBOT == 1 ? 185 : 185)
 #define SURGE_ANGLE 10
 #define SURGE_SPEED 80
@@ -214,8 +217,8 @@ void LEDoff(int pin);
 #define DEFENSE_SURGE_ANGLE 10
 #define DEFENSE_SPEED 40
 #define SWITCH_SPEED 40 
-#define DEFENSE_SUGRE_SPEED (ROBOT == 1 ? 1	00  : 240)
-#define DEFENSE_SURGE_STRENGTH (ROBOT == 1 ? 155 : 130)
+#define DEFENSE_SUGRE_SPEED (ROBOT == 1 ? 100  : 200)
+#define DEFENSE_SURGE_STRENGTH (ROBOT == 1 ? 155 : 125)
 
 // --- BLUETOOTH --- //
 

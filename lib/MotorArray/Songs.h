@@ -10,5 +10,6 @@ void rainbow();
 void xp();
 void wonderful();
 void pirates();
+void baby();
 
 #endif

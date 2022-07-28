@@ -46,4 +46,6 @@
 
 #define LDR 49
 
+#define SUPERTEAMPIN 28
+
 #endif

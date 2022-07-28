@@ -29,6 +29,8 @@ void motorMusic(String song, int trackNum){
         playSong(LORD, sizeof(LORD)/sizeof(uint16_t), 2);
     }else if(song == "MARCH"){
         playSong(MARCH, sizeof(MARCH)/sizeof(uint16_t), 1);
+    } else if(song == "BABY") {
+        baby();
     }
 }
 
