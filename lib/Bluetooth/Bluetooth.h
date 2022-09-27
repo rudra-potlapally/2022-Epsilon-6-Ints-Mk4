@@ -12,7 +12,6 @@ class Bluetooth
         void send();
         void recieve();
         void decideRole();
-        BluetoothData otherData = {0, 0, -1};
         Timer sendTimer = Timer(BT_SEND_TIMER);
         Timer connectedTimer = Timer(BT_CONNECTED_TIMER);
         uint16_t sameRole = 0;
@@ -20,7 +19,8 @@ class Bluetooth
     public:
         void init();
         void update(float ballDir, float ballStr);
-        BluetoothData thisData = {0, 0, -1};
+        BluetoothData thisData = {0, 0, -1, 0};
+        BluetoothData otherData = {0, 0, -1, 0};
         Timer switchTimer = Timer(BT_SWITCH_TIMER);
         bool isConnected = false;
         bool isSwitching = false;

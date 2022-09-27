@@ -49,7 +49,7 @@ void TSSPs::update() {
 
 }
 
-float TSSPs::calculateAngleAddition() {
+float TSSPs::calculateAngleAddition(bool mode) {
 	float dir = ballDir > 180 ? ballDir - 360 : ballDir;
     float ballAngleDifference = findSign(dir) * fmin(90, 0.4 * expf(0.22 * smallestAngleBetween(ballDir, 0)));
     float strengthFactor = constrain(ballStr / BALL_CLOSE_STRENGTH, 0, 1);

@@ -4,12 +4,13 @@
 #include <Arduino.h>
 #include "defines.h"
 #include "pins.h"
+#include "Bluetooth.h"
 
 class TSSPs {
 public:
     TSSPs();
     void update();
-    float calculateAngleAddition();
+    float calculateAngleAddition(bool mode);
     float speedMultiplier(int lowSpd, int highSpd);
     float ballDir;
     float ballStr;

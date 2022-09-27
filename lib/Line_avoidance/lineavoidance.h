@@ -11,12 +11,12 @@ class oAvoidance {
             double speed;
             double direction;
         };
-        int botlocation = 0;
         Movement moveDirection(double lineAngle);
+        bool overLine = false;
+        int botlocation;
     private:
-        
-        double original_line = -1;
-
+        double original_line;
+        double previous_line;
 };
 
 #endif

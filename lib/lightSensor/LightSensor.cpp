@@ -46,8 +46,8 @@ void LightSensor::test(){
 
     for (int j = 0; j < LS_NUM; j++){
         if (read[j] >= ls_cal[j]){
-            if (j == 23 || j == 8 || j == 13){
-                if (white[j-1] || white[j+1]){
+            if (ROBOT != 1 ? (j == 23 || j == 9 || j == 12 || j == 16 || j == 19) : (j == 12 || j == 7 || j == 28 || j == 21)){
+                if (white[j-1] == 1 && white[j+1] == 1){
                     white[j] = 1;
                 } else{
                     white[j] = 0;
@@ -90,8 +90,8 @@ double LightSensor::update() {
 
     for (int j = 0; j < LS_NUM; j++){
         if (read[j] >= ls_cal[j]){
-            if (j == 23 || j == 8 || j == 13){
-                if (white[j-1] || white[j+1]){
+            if (ROBOT != 1 ? (j == 23 || j == 9 || j == 12 || j == 16 || j == 19) : (j == 12 || j == 7 || j == 28 || j == 21)){
+                if (white[j-1] == 1 && white[j+1] == 1){
                     white[j] = 1;
                 } else{
                     white[j] = 0;

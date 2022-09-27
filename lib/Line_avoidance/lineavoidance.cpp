@@ -27,9 +27,9 @@ oAvoidance::Movement oAvoidance::moveDirection(double lineAngle){
             botlocation = 0;
         }
         else if (smallestAngleBetween(lineAngle, original_line) > 120){ //If new line is on opposite side of robot: Outside field of play
-            if (sensor.clusterNum == 2){
-                movement.direction -= 45;
-            }
+            // if (sensor.clusterNum == 2){
+            //     movement.direction -= 45;
+            // }
             movement.direction = floatMod((original_line-180), 360);
             movement.speed = LS_AVOID_MEDIUM;
             botlocation = -1;
@@ -42,7 +42,7 @@ oAvoidance::Movement oAvoidance::moveDirection(double lineAngle){
         break;
     case -1:
         if (lineAngle == -1){ //Doesn't see line when outside field of play: Fully outside
-            movement.direction = floatMod((original_line-180), 360);
+            movement.direction = previous_line;
             movement.speed = LS_AVOID_FAST;
             botlocation = -1;
         }
@@ -63,6 +63,6 @@ oAvoidance::Movement oAvoidance::moveDirection(double lineAngle){
         botlocation = 0;
         break;
     }
-
+    previous_line = (lineAngle != -1 ? lineAngle : previous_line);
     return movement;
 }
