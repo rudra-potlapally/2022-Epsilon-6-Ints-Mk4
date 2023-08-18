@@ -1,20 +1,20 @@
 #ifndef PINS_H
 #define PINS_H
 
-#define BLINA 3
-#define BLINB 4
+#define BLINA 7
+#define BLINB 9
 #define BLPWM 5
 
-#define BRINA 10
-#define BRINB 11
+#define BRINA 12
+#define BRINB 36
 #define BRPWM 9
 
-#define FLINA 0
-#define FLINB 1
+#define FLINA 33
+#define FLINB 37
 #define FLPWM 2
 
-#define FRINA 6
-#define FRINB 7
+#define FRINA 8
+#define FRINB 11
 #define FRPWM 8
 
 #define MPLS1 53

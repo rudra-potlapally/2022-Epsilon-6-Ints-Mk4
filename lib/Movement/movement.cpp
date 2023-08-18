@@ -1,10 +1,10 @@
 #include "movement.h"
 
 Movement::Movement(){
-    bl = Motor(BLPWM, BLINA, BLINB, true);
-    br = Motor(BRPWM, BRINA, BRINB, true);
-    fl = Motor(FLPWM, FLINA, FLINB, true);
-    fr = Motor(FRPWM, FRINA, FRINB, true);
+    bl = Motor(BLINA, BLINB);
+    br = Motor(BRINA, BRINB);
+    fl = Motor(FLINA, FLINB);
+    fr = Motor(FRINA, FRINB);
 }
 
 void Movement::move(int speed, int direction, int rotation){

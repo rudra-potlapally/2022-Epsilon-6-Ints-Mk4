@@ -1,38 +1,25 @@
 #include "motor.h"
 
-Motor::Motor(int pwm, int ina, int inb, bool rev){
-    pwmPin = pwm;
+Motor::Motor(int ina, int inb){
     inaPin = ina;
     inbPin = inb;
 
-    reversed = rev;
-
-    pinMode(pwmPin, OUTPUT);
     pinMode(inaPin, OUTPUT);
     pinMode(inbPin, OUTPUT);
 }
 
-void Motor::move(int speed) {
-    
-    if (speed > 0) {
-        analogWrite(pwmPin, constrain(speed,0,255));
-        digitalWriteFast(inaPin, HIGH);
+void Motor::move(float speed) {
+    if (speed >= 0) {
+        analogWrite(inaPin, constrain(abs(speed),0,255));
         digitalWriteFast(inbPin, LOW);
     }
     else if (speed < 0) {
-        analogWrite(pwmPin, constrain(abs(speed),0,255));
         digitalWriteFast(inaPin, LOW);
-        digitalWriteFast(inbPin, HIGH);
-    }
-    else {
-        analogWrite(pwmPin, 0);
-        digitalWriteFast(inaPin, LOW);
-        digitalWriteFast(inbPin, LOW);
+        analogWrite(inbPin, constrain(abs(speed),0,255));
     }
 }
 
 void Motor::brake(){
-    // analogWrite(pwmPin, 0);
     digitalWriteFast(inaPin, HIGH);
     digitalWriteFast(inbPin, HIGH);
 }   

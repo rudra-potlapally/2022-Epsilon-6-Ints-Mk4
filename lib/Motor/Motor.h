@@ -8,11 +8,11 @@
 class Motor {
 	public:
 		Motor(){};
-		Motor(int pwm, int ina, int inb, bool rev);
-		void move(int speed);
+		Motor(int ina, int inb);
+		void move(float speed);
 		void brake();
 	private:
-		int pwmPin, inaPin, inbPin;
+		int inaPin, inbPin;
 		bool reversed;	
 };
 
